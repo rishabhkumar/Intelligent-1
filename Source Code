@@ -1,0 +1,227 @@
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+
+
+
+class Cube1 extends Canvas
+{
+    int xEnd, xStart, yEnd, yStart;
+    Color color;
+
+    /*public Cube1(int id, int xStart, int xEnd, int xMid, int yStart, int yEnd, int top, String color)            // If top == 0, that means there is no one on top of the 'this' cube
+    {
+	this.id = id;
+	this.xStart = xStart;
+	this.xEnd = xEnd;
+	this.xMid = xMid;
+	this.yStart = yStart;
+	this.yEnd = yEnd;
+	this.top = top;
+	this.color = color;
+	}*/
+
+    public void update(Graphics g)
+    {
+	g.setColor(Color.BLACK);
+	g.drawRect(xStart, yStart, ((xEnd - xStart) + 1), ((yEnd - yStart) + 1));
+	g.setColor(color);
+	g.fillRect(xStart, yStart, ((xEnd - xStart) + 1), ((yEnd - yStart) + 1));
+	System.out.println("Right here buddy!");
+	System.out.println("xStart : " + xStart + ", yEnd : " + yEnd + ", xEnd : " + xEnd + ", yStart : " + yStart);
+	//g.setColor(Color.RED);
+    }
+}
+
+class Cube2       // The Brain
+{
+    int xEnd, xStart, yStart, yEnd;
+    Cube1 c;      // The Canvas
+    AI1 a;
+    Cube2 top, destination;
+    //Cube2 shape[5];
+
+    public Cube2(Cube1 c)
+    {
+	this.c = c;
+    }
+    
+    public void moveCube(Cube2 source, Cube2 destination, Cube2 shape[])
+    {
+	this.destination = destination;
+	// Checking if the top of the cube is empty or not, if not, then empty it
+	if(source.top != null && destination.top != null)
+	    {
+		if(source.top != null)
+		    {
+			this.top = source.top;
+		    }
+		if(destination.top != null)
+		    {
+			this.top = destination.top;
+		    }
+		int length = (top.xEnd - top.xStart);      // Width of the top box
+		for(int i = 50; i<351; i++)
+		    {
+			int j = i + length;
+			int k = 0;
+			for(k = 0; k<5; k++)
+			    {
+				if(shape[k].xStart < j)
+				    {
+					k = 6;
+					i = shape[k].xStart;
+				    }
+			    }
+			if(k == 5)
+			    {
+				relocateCube(top, i);
+			    }
+		    }
+	    }
+	relocateCube(source, destination.xStart);
+	destination.top = source;
+	source.top = null;
+    }
+
+    public void relocateCube(Cube2 a1, int start)
+    {
+	// Removing the Cube
+	c.xStart = a1.xStart;
+	c.xEnd = a1.xEnd;
+	c.yStart = a1.yStart;
+	c.yEnd = a1.yEnd;
+	c.color = Color.WHITE;
+	c.repaint();
+	
+	// Pasting the Cube
+	c.xStart = start;
+	c.xEnd = start + (a1.xEnd - a1.xStart);
+	int height = a1.yStart - a1.yEnd;
+	c.yStart = destination.yStart - height;
+	c.yEnd = destination.yStart;
+	c.color = Color.RED;
+	c.repaint();
+	destination = null;
+    }
+	
+    
+}
+	
+    
+public class AI1 implements ActionListener
+{
+    JFrame f1;
+    JTextField tf1, tf2;
+    JButton bb1, bb2;
+    JLabel l1;
+    Cube1 c;
+    //Cube b1, b2, b3, b4, b5;
+    Cube2 a[];
+
+    public AI1()
+    {
+	f1 = new JFrame("AI1");
+	c = new Cube1();
+	c.setBackground(Color.LIGHT_GRAY);
+	c.setBounds(20, 20, 400, 400);
+	f1.add(c);
+	tf1 = new JTextField();
+	tf1.setBounds(20, 430, 100, 30);
+	f1.add(tf1);
+	l1 = new JLabel("ON");
+	l1.setBounds(150, 430, 30, 30);
+	f1.add(l1);
+	tf2 = new JTextField();
+	tf2.setBounds(200, 430, 100, 30);
+	f1.add(tf2);
+	bb1 = new JButton("Table");
+	bb1.setBounds(350, 430, 100, 30);
+	bb1.addActionListener(this);
+	f1.add(bb1);
+	bb2 = new JButton("Shapes");
+	bb2.setBounds(250, 460, 150, 20);
+	bb2.addActionListener(this);
+	f1.add(bb2);
+	a = new Cube2[5];
+	for(int i = 0; i<5; i++)
+	    {
+		a[i] = new Cube2(c);
+	    }
+	
+	// Creating the Table
+	c.xStart = 50;
+	c.xEnd = 350;
+	c.yStart = 350;
+	c.yEnd = 380;
+	c.color = Color.BLACK;
+	//c.repaint();
+	//System.out.println("Now!");
+	f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	f1.setSize(500, 500);
+	f1.setLayout(null);
+	f1.setVisible(true);
+	//cc = new Cube1();
+    }
+
+    public void actionPerformed(ActionEvent e)
+    {
+	if(e.getSource() == bb1)
+	    {
+		c.repaint();
+		//f1.setVisible(false);
+		//f1.setVisible(true);
+		//initialMap();
+	    }
+	if(e.getSource() == bb2)
+	    {
+		initialMap();
+	    }
+    }
+
+    public void initialMap()
+    {
+	int x1 = 200, x2 = 230, y1 = 300, y2 = 350;
+	for(int i = 0; i<4; i++)
+	    {
+		System.out.println("Hey");
+		a[i].top = null;
+		a[i].xStart = x1;
+		a[i].xEnd = x2;
+		a[i].yStart = y1;
+		a[i].yEnd = y2;
+		c.xStart = a[i].xStart;
+		c.xEnd = a[i].xEnd;
+		c.yStart = a[i].yStart;
+		c.yEnd = a[i].yEnd;
+		c.color = Color.RED;
+		//c.repaint();
+		x1 = x2 + 10;
+		x2 += 40;
+	    }
+	a[3].top = a[4];
+	a[4].xStart = a[3].xStart;
+	a[4].xEnd = a[4].xStart + 30;
+	a[4].yStart = 250;
+	a[4].yEnd = a[3].yStart;
+	c.xStart = a[4].xStart;
+	c.xEnd = a[4].xEnd;
+	c.yStart = a[4].yStart;
+	c.yEnd = a[4].yEnd;
+	c.color = Color.RED;
+	for(int kk = 0; kk<5; kk++)
+	    {		
+		System.out.println("In the Loop ! xStart : " + a[kk].xStart + ", yStart : " + a[kk].yStart + ", xEnd : " + a[kk].xEnd + ", yEnd : " + a[kk].yEnd);
+	    }
+	c.revalidate();
+	c.repaint();
+    }
+
+    public static void main(String... s)
+    {
+	new AI1();
+	//cc = new Cube1();
+	//a[5] = new Cube2(cc);
+	//initialMap(a, cc);
+    }
+}
