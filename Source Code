@@ -113,7 +113,7 @@ public class AI1 implements ActionListener
 {
     JFrame f1;
     JTextField tf1, tf2;
-    JButton bb1, bb2;
+    JButton bb1, bb2, bb3, bb4;
     JLabel l1;
     Cube1 c;
     //Cube b1, b2, b3, b4, b5;
@@ -143,6 +143,14 @@ public class AI1 implements ActionListener
 	bb2.setBounds(250, 460, 150, 20);
 	bb2.addActionListener(this);
 	f1.add(bb2);
+	bb3 = new JButton("Test 1");
+	bb3.setBounds(30, 700, 100, 30);
+	bb3.addActionListener(this);
+	f1.add(bb3);
+	bb4 = new JButton("Test 2");
+	bb4.setBounds(120, 700, 100, 30);
+	bb4.addActionListener(this);
+	f1.add(bb4);
 	a = new Cube2[5];
 	for(int i = 0; i<5; i++)
 	    {
@@ -158,7 +166,7 @@ public class AI1 implements ActionListener
 	//c.repaint();
 	//System.out.println("Now!");
 	f1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	f1.setSize(500, 500);
+	f1.setSize(800, 780);
 	f1.setLayout(null);
 	f1.setVisible(true);
 	//cc = new Cube1();
@@ -166,17 +174,20 @@ public class AI1 implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-	if(e.getSource() == bb1)
+	if(e.getSource() == bb3)
 	    {
 		c.repaint();
 		//f1.setVisible(false);
 		//f1.setVisible(true);
 		//initialMap();
 	    }
-	if(e.getSource() == bb2)
+	if(e.getSource() == bb4)
 	    {
 		initialMap();
 	    }
+	if(e.getSource() == bb1)
+	    {
+		
     }
 
     public void initialMap()
@@ -195,7 +206,7 @@ public class AI1 implements ActionListener
 		c.yStart = a[i].yStart;
 		c.yEnd = a[i].yEnd;
 		c.color = Color.RED;
-		//c.repaint();
+		c.repaint();
 		x1 = x2 + 10;
 		x2 += 40;
 	    }
@@ -213,7 +224,6 @@ public class AI1 implements ActionListener
 	    {		
 		System.out.println("In the Loop ! xStart : " + a[kk].xStart + ", yStart : " + a[kk].yStart + ", xEnd : " + a[kk].xEnd + ", yEnd : " + a[kk].yEnd);
 	    }
-	c.revalidate();
 	c.repaint();
     }
 
