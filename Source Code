@@ -187,7 +187,7 @@ public class AI1 implements ActionListener
 	    }
 	if(e.getSource() == bb1)
 	    {
-		
+	    }	
     }
 
     public void initialMap()
